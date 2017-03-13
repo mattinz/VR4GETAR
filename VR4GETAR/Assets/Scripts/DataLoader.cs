@@ -3,9 +3,16 @@ using System.IO;
 
 public static class DataLoader
 {
-    public static List<TextData> getTextData(string dir)
+    public static List<IData> getData(string dir)
     {
-        List<TextData> result = new List<TextData>();
+        List<IData> result = new List<IData>();
+
+        getTextData(dir, result);
+        return result;
+    }
+
+    private static void getTextData(string dir, List<IData> result)
+    {
         string[] files = Directory.GetFiles(dir, "*.csv");
 
         foreach(string file in files)
@@ -26,7 +33,5 @@ public static class DataLoader
 
             reader.Close();
         }
-
-        return result;
     }
 }

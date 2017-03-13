@@ -4,23 +4,29 @@ using UnityEngine;
 
 public class PointGenerator : MonoBehaviour
 {
+    [SerializeField] private GameObject pointPrefab;
     [SerializeField] private float radius = 1;
 
 	void Start ()
     {
-        List<TextData> dataList = DataLoader.getTextData("Assets/Data");
-        foreach(TextData textData in dataList)
-        {
-            GameObject point = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-            point.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
-            point.transform.SetParent(transform);
-            point.transform.localPosition = Vector3.zero;
+        Dictionary<Vector3, GameObject> pointDict = new Dictionary<Vector3, GameObject>();
 
-            //Rotate to face proper lat lng
-            float lat = textData.getLatLng().x;
-            float lng = textData.getLatLng().y;
-            point.transform.position += Quaternion.AngleAxis(lng, -Vector3.up) * Quaternion.AngleAxis(lat, -Vector3.right) * new Vector3(0, 0, radius);
-            //point.transform.position += point.transform.forward * radius;
+        List<IData> dataList = DataLoader.getData("Assets/Data");
+        foreach(IData data in dataList)
+        {            
+            Vector2 latLng = data.getLatLng();
+            GameObject point;
+            if (pointDict.ContainsKey(latLng))
+            {
+                pointDict.TryGetValue(latLng, out point);
+            }
+            else
+            {
+                point = GameObject.Instantiate(pointPrefab, transform);
+                point.transform.position = transform.position + Quaternion.AngleAxis(latLng.y, -Vector3.up) * Quaternion.AngleAxis(latLng.x, -Vector3.right) * new Vector3(0, 0, radius);
+                pointDict.Add(latLng, point);
+            }
+            point.GetComponent<PointController>().addData(data);
         }
 	}
 }

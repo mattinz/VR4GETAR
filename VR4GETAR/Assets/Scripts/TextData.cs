@@ -1,8 +1,9 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TextData
+public class TextData : IData
 {
     private Vector2 latLng;
     private string text;
@@ -13,9 +14,12 @@ public class TextData
         latLng = new Vector2(lat, lng);
     }
 
-    public string getData()
+    public GameObject createDataView()
     {
-        return text;
+        GameObject dataView = GameObject.Instantiate(GameObject.FindGameObjectWithTag("OriginalDataView"));
+        dataView.GetComponent<DataViewController>().setText(text);
+        dataView.SetActive(true);
+        return dataView;
     }
 
     public Vector2 getLatLng()
