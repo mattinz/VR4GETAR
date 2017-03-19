@@ -4,21 +4,29 @@ using UnityEngine;
 
 public class DataViewController : MonoBehaviour
 {
-    [SerializeField] private GameObject Text;
+    [SerializeField] private GameObject text;
+    [SerializeField] private GameObject image;
 
 	// Use this for initialization
 	void Start ()
     {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
+        //text.SetActive(false);
+        //image.SetActive(false);
 	}
 
     public void setText(string data)
     {
-        Text.GetComponent<TextMesh>().text = data;
+        text.SetActive(true);
+        image.SetActive(false);
+
+        text.GetComponent<TextMesh>().text = data;
+    }
+
+    public void setImage(Texture2D data)
+    {
+        text.SetActive(false);
+        image.SetActive(true);
+
+        image.GetComponent<Renderer>().material.mainTexture = data;
     }
 }

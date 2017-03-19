@@ -27,6 +27,7 @@ public static class DataLoader
         List<IData> result = new List<IData>();
 
         getTextData(DATA_DIR, result);
+        getImageData(DATA_DIR, result);
         return result;
     }
 
@@ -51,6 +52,23 @@ public static class DataLoader
             }
 
             reader.Close();
+        }
+    }
+
+    private static void getImageData(string dir, List<IData> result)
+    {
+        string[] files = Directory.GetFiles(dir, "*.jpg");
+        foreach(string file in files)
+        {
+            byte[] imageData = File.ReadAllBytes(file);
+            Texture2D image = new Texture2D(1, 1);
+            image.LoadImage(imageData);
+
+            string locationName = file.Replace(DATA_DIR + "\\", "").Split('_')[0];
+            Vector2 latLng = Vector2.zero;
+            locationDictionary.TryGetValue(locationName, out latLng);
+
+            result.Add(new ImageData(image, latLng.x, latLng.y));
         }
     }
 }
