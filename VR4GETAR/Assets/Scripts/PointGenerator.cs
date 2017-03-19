@@ -11,7 +11,7 @@ public class PointGenerator : MonoBehaviour
     {
         Dictionary<Vector3, GameObject> pointDict = new Dictionary<Vector3, GameObject>();
 
-        List<IData> dataList = DataLoader.getData("Assets/Data");
+        List<IData> dataList = DataLoader.getData();
         foreach(IData data in dataList)
         {            
             Vector2 latLng = data.getLatLng();
