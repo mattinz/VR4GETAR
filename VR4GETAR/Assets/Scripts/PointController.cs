@@ -63,6 +63,7 @@ public class PointController : MonoBehaviour
         {
             dataView.position = basePos;
             basePos.y -= 0.2f;
+            basePos.z += 0.1f;
         }
     }
 
