@@ -18,7 +18,7 @@ public class PointController : MonoBehaviour
 
     void Update()
     {
-        transform.LookAt(Camera.main.transform);
+        //transform.LookAt(Camera.main.transform);
     }
 
     public void addData(IData data)
@@ -51,8 +51,15 @@ public class PointController : MonoBehaviour
 
         //Position the data views
         //TEMPORARY DESKTOP-APP POSITIONING
-        Vector3 basePos = transform.position + transform.right * 1.2f + transform.forward * 1.0f + transform.up * 0.25f;
+        /*Vector3 basePos = transform.position + transform.right * 1.2f + transform.forward * 1.0f + transform.up * 0.25f;
         foreach(Transform dataView in transform)
+        {
+            dataView.position = basePos;
+            basePos.y -= 0.2f;
+        }*/
+
+        Vector3 basePos = transform.parent.position + transform.parent.right * 1.2f + transform.parent.forward * 0.25f + transform.parent.up * 0.25f;
+        foreach (Transform dataView in transform)
         {
             dataView.position = basePos;
             basePos.y -= 0.2f;

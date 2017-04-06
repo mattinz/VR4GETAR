@@ -848,6 +848,19 @@ namespace Valve.VR.InteractionSystem
 			return false;
 		}
 
+        public bool GetButton(ulong buttonMask)
+        {
+            Debug.Log("Checking");
+            if (controller != null)
+            {
+                return controller.GetPress(buttonMask);
+            }
+            else
+            {
+                return false;
+            }
+        }
+
 
 		//-------------------------------------------------
 		private void InitController( int index )
