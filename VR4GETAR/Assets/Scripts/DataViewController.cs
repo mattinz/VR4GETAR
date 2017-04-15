@@ -14,6 +14,17 @@ public class DataViewController : MonoBehaviour
         //image.SetActive(false);
 	}
 
+    public bool isInteractable()
+    {
+        return GetComponent<Valve.VR.InteractionSystem.Throwable>() != null;
+    }
+
+    public void makeInteractable()
+    {
+        gameObject.AddComponent<Valve.VR.InteractionSystem.Throwable>();
+        GetComponent<Rigidbody>().isKinematic = true;
+    }
+
     public void setText(string data)
     {
         text.SetActive(true);

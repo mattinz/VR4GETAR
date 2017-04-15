@@ -7,18 +7,25 @@ public class DataDisplayController : MonoBehaviour
     private IData[] dataArray;
     private int currentIndex;
 
-    public void show(List<IData> data)
-    {
-        dataArray = data.ToArray();
-        currentIndex = 0;
-
-        showDataView(dataArray[currentIndex]);
-    }
-
     public void clear()
     {
         deleteCurrentDataView();
         dataArray = null;
+    }
+
+    public GameObject getCurrentDataView()
+    {
+        Transform currentView = transform.GetChild(0);
+        GameObject clone = null;
+
+        if (currentView != null)
+        {
+            clone = Instantiate(currentView.gameObject, null);
+            clone.transform.position = currentView.transform.position;
+            clone.transform.rotation = currentView.transform.rotation;
+        }
+
+        return clone;
     }
 
     public void next()
@@ -29,6 +36,14 @@ public class DataDisplayController : MonoBehaviour
             currentIndex = (currentIndex + 1) % dataArray.Length;
             showDataView(dataArray[currentIndex]);
         }
+    }
+
+    public void show(List<IData> data)
+    {
+        dataArray = data.ToArray();
+        currentIndex = 0;
+
+        showDataView(dataArray[currentIndex]);
     }
 
     private void deleteCurrentDataView()

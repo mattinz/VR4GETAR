@@ -70,10 +70,18 @@ public class InputHandler : MonoBehaviour
         {
             dataDisplay.GetComponent<DataDisplayController>().next();
         }
+        else if(hand.GetButtonDown(SteamVR_Controller.ButtonMask.ApplicationMenu))
+        {
+            GameObject dataView = dataDisplay.GetComponent<DataDisplayController>().getCurrentDataView();
+            dataView.GetComponent<DataViewController>().makeInteractable();
+        }
     }
 
     private void checkLaser()
     {
+        laser.SetActive(false);
+        laser.GetComponent<MeshRenderer>().material = laserDefaultMaterial;
+
         if (hand.GetButton(SteamVR_Controller.ButtonMask.Grip))
         {
             RaycastHit hit;
@@ -83,30 +91,27 @@ public class InputHandler : MonoBehaviour
                 laser.transform.localScale = new Vector3(laserThickness, laserThickness, hit.distance);
                 laser.SetActive(true);
 
+                //Lots of code duplication here. If it gets worse, abstract it out.
                 if (hit.collider.transform.GetComponent<PointController>() != null)
                 {
                     laser.GetComponent<MeshRenderer>().material = laserHitMaterial;
                     if (hand.GetStandardInteractionButtonDown())
                     {
-                        //hit.collider.transform.GetComponent<PointController>().onSelect();
                         List<IData> hitData = hit.collider.transform.GetComponent<PointController>().getData();
                         dataDisplay.GetComponent<DataDisplayController>().show(hitData);
                         showingData = true;
                     }
                 }
-                else
+                else if (hit.collider.transform.GetComponent<DataViewController>() != null
+                    && hit.collider.transform.GetComponent<DataViewController>().isInteractable())
                 {
-                    laser.GetComponent<MeshRenderer>().material = laserDefaultMaterial;
+                    laser.GetComponent<MeshRenderer>().material = laserHitMaterial;
+                    if (hand.GetStandardInteractionButtonDown())
+                    {
+                        Destroy(hit.collider.gameObject);
+                    }
                 }
             }
-            else
-            {
-                laser.SetActive(false);
-            }
-        }
-        else
-        {
-            laser.SetActive(false);
         }
     }
 }
