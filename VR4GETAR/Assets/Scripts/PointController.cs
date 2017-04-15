@@ -26,6 +26,11 @@ public class PointController : MonoBehaviour
         dataList.Add(data);
     }
 
+    public List<IData> getData()
+    {
+        return dataList;
+    }
+
     public void onSelect()
     {
         if(showingData)

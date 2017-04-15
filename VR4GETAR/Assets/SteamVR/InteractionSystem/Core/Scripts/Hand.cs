@@ -850,7 +850,6 @@ namespace Valve.VR.InteractionSystem
 
         public bool GetButton(ulong buttonMask)
         {
-            Debug.Log("Checking");
             if (controller != null)
             {
                 return controller.GetPress(buttonMask);
@@ -861,9 +860,21 @@ namespace Valve.VR.InteractionSystem
             }
         }
 
+        public bool GetButtonDown(ulong buttonMask)
+        {
+            if (controller != null)
+            {
+                return controller.GetPressDown(buttonMask);
+            }
+            else
+            {
+                return false;
+            }
+        }
 
-		//-------------------------------------------------
-		private void InitController( int index )
+
+        //-------------------------------------------------
+        private void InitController( int index )
 		{
 			if ( controller == null )
 			{

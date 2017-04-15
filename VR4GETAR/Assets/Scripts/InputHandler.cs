@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class InputHandler : MonoBehaviour
 {
+    [SerializeField] private GameObject dataDisplay;
     [SerializeField] private GameObject laserAttachPoint;
     [SerializeField] private float laserThickness = 0.01f;
     [SerializeField]private Color laserDefaultColor = Color.red;
@@ -13,7 +14,7 @@ public class InputHandler : MonoBehaviour
     private GameObject laser;
     private Material laserDefaultMaterial;
     private Material laserHitMaterial;
-    
+    private bool showingData;
 
     void Awake()
     {
@@ -39,26 +40,58 @@ public class InputHandler : MonoBehaviour
 
         laser.GetComponent<MeshRenderer>().material = laserDefaultMaterial;
         laser.SetActive(false);
+
+        showingData = false;
     }
 	
-	// Update is called once per frame
 	void Update ()
     {
-        if(hand.GetButton(SteamVR_Controller.ButtonMask.Grip))
+        if (showingData)
+        {
+            laser.SetActive(false);
+            checkDataDisplay();
+        }
+        else
+        {
+            checkLaser();
+        }
+
+        
+	}
+
+    private void checkDataDisplay()
+    {
+        if(hand.GetButtonDown(SteamVR_Controller.ButtonMask.Grip))
+        {
+            dataDisplay.GetComponent<DataDisplayController>().clear();
+            showingData = false;
+        }
+        else if(hand.GetStandardInteractionButtonDown())
+        {
+            dataDisplay.GetComponent<DataDisplayController>().next();
+        }
+    }
+
+    private void checkLaser()
+    {
+        if (hand.GetButton(SteamVR_Controller.ButtonMask.Grip))
         {
             RaycastHit hit;
-            if(Physics.Raycast(laserAttachPoint.transform.position, laserAttachPoint.transform.forward, out hit))
+            if (Physics.Raycast(laserAttachPoint.transform.position, laserAttachPoint.transform.forward, out hit))
             {
                 laser.transform.position = laserAttachPoint.transform.position + laserAttachPoint.transform.forward * hit.distance / 2;
                 laser.transform.localScale = new Vector3(laserThickness, laserThickness, hit.distance);
                 laser.SetActive(true);
 
-                if(hit.collider.transform.GetComponent<PointController>() != null)
+                if (hit.collider.transform.GetComponent<PointController>() != null)
                 {
                     laser.GetComponent<MeshRenderer>().material = laserHitMaterial;
-                    if(hand.GetStandardInteractionButtonDown())
+                    if (hand.GetStandardInteractionButtonDown())
                     {
-                        hit.collider.transform.GetComponent<PointController>().onSelect();
+                        //hit.collider.transform.GetComponent<PointController>().onSelect();
+                        List<IData> hitData = hit.collider.transform.GetComponent<PointController>().getData();
+                        dataDisplay.GetComponent<DataDisplayController>().show(hitData);
+                        showingData = true;
                     }
                 }
                 else
@@ -75,5 +108,5 @@ public class InputHandler : MonoBehaviour
         {
             laser.SetActive(false);
         }
-	}
+    }
 }
