@@ -92,8 +92,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6debdebe09c90d449a18c365cc4bcabd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  open: {fileID: 2100000, guid: 29a48fed9f25a4e43a749e7c01cf7e85, type: 2}
-  close: {fileID: 2100000, guid: 0433f0e51d7597c4d883411742b7a5ee, type: 2}
+  imageMaterial: {fileID: 2100000, guid: 0433f0e51d7597c4d883411742b7a5ee, type: 2}
+  textMaterial: {fileID: 2100000, guid: 29a48fed9f25a4e43a749e7c01cf7e85, type: 2}
 --- !u!135 &135984407021841568
 SphereCollider:
   m_ObjectHideFlags: 1

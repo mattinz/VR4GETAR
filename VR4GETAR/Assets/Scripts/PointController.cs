@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class PointController : MonoBehaviour
 {
-    [SerializeField] private Material open;
-    [SerializeField] private Material close;
-
+    [SerializeField] private Material imageMaterial;
+    [SerializeField] private Material textMaterial;
+    
     private List<IData> dataList;
     private bool showingData;
 
@@ -23,6 +23,14 @@ public class PointController : MonoBehaviour
 
     public void addData(IData data)
     {
+        if(data is ImageData)
+        {
+            GetComponent<Renderer>().material = imageMaterial;
+        }
+        else
+        {
+            GetComponent<Renderer>().material = textMaterial;
+        }
         dataList.Add(data);
     }
 
@@ -46,8 +54,6 @@ public class PointController : MonoBehaviour
 
     private void showData()
     {
-        GetComponent<Renderer>().material = open;
-
         foreach(IData data in dataList)
         {
             GameObject dataView = data.createDataView();
@@ -74,7 +80,6 @@ public class PointController : MonoBehaviour
 
     private void hideData()
     {
-        GetComponent<Renderer>().material = close;
         foreach (Transform dataView in transform)
         {
             Destroy(dataView.gameObject);
