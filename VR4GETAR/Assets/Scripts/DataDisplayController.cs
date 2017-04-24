@@ -23,6 +23,8 @@ public class DataDisplayController : MonoBehaviour
             clone = Instantiate(currentView.gameObject, null);
             clone.transform.position = currentView.transform.position;
             clone.transform.rotation = currentView.transform.rotation;
+
+            clone.GetComponent<DataViewController>().extra = currentView.GetComponent<DataViewController>().extra;
         }
 
         return clone;

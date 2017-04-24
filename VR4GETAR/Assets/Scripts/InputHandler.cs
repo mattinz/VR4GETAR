@@ -74,6 +74,12 @@ public class InputHandler : MonoBehaviour
         {
             GameObject dataView = dataDisplay.GetComponent<DataDisplayController>().getCurrentDataView();
             dataView.GetComponent<DataViewController>().makeInteractable();
+
+            GameObject collection = GameObject.FindGameObjectWithTag("Collection");
+            if(collection != null)
+            {
+                dataView.transform.parent = collection.transform;
+            }
         }
     }
 
@@ -102,13 +108,22 @@ public class InputHandler : MonoBehaviour
                         showingData = true;
                     }
                 }
-                else if (hit.collider.transform.GetComponent<DataViewController>() != null
-                    && hit.collider.transform.GetComponent<DataViewController>().isInteractable())
+                else if (hit.transform.GetComponent<DataViewController>() != null
+                    && hit.transform.GetComponent<DataViewController>().isInteractable())
                 {
                     laser.GetComponent<MeshRenderer>().material = laserHitMaterial;
                     if (hand.GetStandardInteractionButtonDown())
                     {
-                        Destroy(hit.collider.gameObject);
+                        Destroy(hit.transform.gameObject);
+                    }
+                }
+                else if(hit.transform.parent != null 
+                    && hit.transform.parent.gameObject.GetComponent<Menu>() != null)
+                {
+                    laser.GetComponent<MeshRenderer>().material = laserHitMaterial;
+                    if (hand.GetStandardInteractionButtonDown())
+                    {
+                        hit.transform.parent.GetComponent<Menu>().buttonPressed(hit.collider.gameObject);
                     }
                 }
             }

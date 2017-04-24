@@ -4,7 +4,7 @@ using UnityEngine;
 
 public static class DataLoader
 {
-    private static readonly string DATA_DIR = "Assets/Data";
+    public static readonly string DATA_DIR = "Assets/Data";
     private static readonly string LOCATION_FILE_NAME = "Locations.txt";
     private static readonly Dictionary<string, Vector2> locationDictionary = new Dictionary<string, Vector2>();
 
@@ -31,6 +31,36 @@ public static class DataLoader
         return result;
     }
 
+    public static IData parseTextData(string rawData)
+    {
+        string[] line = rawData.Split(',');
+
+        if (line.Length == 5)
+        {
+            string data = line[1] + " - " + line[2];
+            float lat = float.Parse(line[3]);
+            float lng = float.Parse(line[4]);
+            return new TextData(data, lat, lng, rawData);
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+    public static IData parseImageData(string file)
+    {
+        byte[] imageData = File.ReadAllBytes(file);
+        Texture2D image = new Texture2D(1, 1);
+        image.LoadImage(imageData);
+
+        string locationName = file.Replace(DATA_DIR + "\\", "").Split('_')[0];
+        Vector2 latLng = Vector2.zero;
+        locationDictionary.TryGetValue(locationName, out latLng);
+
+        return new ImageData(image, latLng.x, latLng.y, file);
+    }
+
     private static void getTextData(string dir, List<IData> result)
     {
         string[] files = Directory.GetFiles(dir, "*.csv");
@@ -40,14 +70,20 @@ public static class DataLoader
             StreamReader reader = new StreamReader(file);
             while(!reader.EndOfStream)
             {
-                string[] line = reader.ReadLine().Split(',');
+                /*string rawData = reader.ReadLine();
+                string[] line = rawData.Split(',');
 
                 if (line.Length == 5)
                 {
                     string data = line[1] + " - " + line[2];
                     float lat = float.Parse(line[3]);
                     float lng = float.Parse(line[4]);
-                    result.Add(new TextData(data, lat, lng));
+                    result.Add(new TextData(data, lat, lng, rawData));
+                }*/
+                IData data = parseTextData(reader.ReadLine());
+                if(data != null)
+                {
+                    result.Add(data);
                 }
             }
 
@@ -60,7 +96,7 @@ public static class DataLoader
         string[] files = Directory.GetFiles(dir, "*.jpg");
         foreach(string file in files)
         {
-            byte[] imageData = File.ReadAllBytes(file);
+            /*byte[] imageData = File.ReadAllBytes(file);
             Texture2D image = new Texture2D(1, 1);
             image.LoadImage(imageData);
 
@@ -68,7 +104,9 @@ public static class DataLoader
             Vector2 latLng = Vector2.zero;
             locationDictionary.TryGetValue(locationName, out latLng);
 
-            result.Add(new ImageData(image, latLng.x, latLng.y));
+            result.Add(new ImageData(image, latLng.x, latLng.y, file));*/
+
+            result.Add(parseImageData(file));
         }
     }
 }
